@@ -1,3 +1,4 @@
+require 'date'
 class Enigma
   attr_reader :alphabet,
               :random_number,
@@ -20,5 +21,9 @@ class Enigma
     @b_key = random_number.to_s.split("")[1..2].join.to_i
     @c_key = random_number.to_s.split("")[2..3].join.to_i
     @d_key = random_number.to_s.split("")[3..4].join.to_i
+  end
+
+  def fetch_date
+    Date.today.strftime('%d%m%y').to_i
   end
 end

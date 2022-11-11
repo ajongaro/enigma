@@ -36,4 +36,12 @@ RSpec.describe Enigma do
       expect(enigma.d_key).to eq(94)
     end
   end
+
+  describe "#fetch_date" do
+    it 'returns todays date as an integer' do
+      expect(enigma.fetch_date).to be_a(Integer)
+      require 'pry'; binding.pry
+      expect(enigma.fetch_date.to_s.length).to eq(6)
+    end
+  end
 end
