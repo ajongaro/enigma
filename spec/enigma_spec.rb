@@ -3,7 +3,7 @@ require './lib/enigma'
 RSpec.describe Enigma do
   let(:enigma) { Enigma.new }
 
-  describe "#initialize" do
+  describe '#initialize' do
     it 'exists' do
       expect(enigma).to be_a(Enigma)
     end
@@ -13,7 +13,7 @@ RSpec.describe Enigma do
     end
   end
 
-  describe "#generate_random" do
+  describe '#generate_random' do
     it 'generates a random five digit number' do
       first_number = enigma.generate_random
       second_number = enigma.generate_random
@@ -24,7 +24,7 @@ RSpec.describe Enigma do
     end
   end
 
-  describe "#generate_keys" do
+  describe '#generate_keys' do
     it 'generates keys based on random number' do
       allow(enigma).to receive(:random_number).and_return(54294)
 
@@ -37,10 +37,23 @@ RSpec.describe Enigma do
     end
   end
 
-  describe "#fetch_date" do
+  describe '#fetch_date' do
     it 'returns todays date as an integer' do
       expect(enigma.fetch_date).to be_a(Integer)
       expect(enigma.fetch_date.to_s.length).to eq(6)
+    end
+  end
+
+  describe '#generate_offsets' do
+    it 'generates offsets based on todays date' do
+      allow(enigma).to receive(:fetch_date).and_return(111122)
+
+      enigma.parse_offset
+
+      expect(enigma.a_offset).to eq(8)
+      expect(enigma.b_offset).to eq(8)
+      expect(enigma.c_offset).to eq(8)
+      expect(enigma.d_offset).to eq(4)
     end
   end
 end

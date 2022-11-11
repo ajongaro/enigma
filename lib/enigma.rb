@@ -5,7 +5,11 @@ class Enigma
               :a_key,
               :b_key,
               :c_key,
-              :d_key
+              :d_key,
+              :a_offset,
+              :b_offset,
+              :c_offset,
+              :d_offset
 
   def initialize
     @alphabet = ("a".."z").to_a << " "
@@ -21,6 +25,15 @@ class Enigma
     @b_key = random_number.to_s.split("")[1..2].join.to_i
     @c_key = random_number.to_s.split("")[2..3].join.to_i
     @d_key = random_number.to_s.split("")[3..4].join.to_i
+  end
+
+  def date_to_offset
+    squared_last_four = (fetch_date**2)
+    squared_last_four.to_s[-4..-1].split("").map(&:to_i)
+  end
+
+  def parse_offset
+    @a_offset, @b_offset, @c_offset, @d_offset = date_to_offset
   end
 
   def fetch_date
