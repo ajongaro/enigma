@@ -23,4 +23,17 @@ RSpec.describe Enigma do
       expect(enigma.random_number).to be_a(Integer)
     end
   end
+
+  describe "#generate_keys" do
+    it 'generates keys based on random number' do
+      allow(enigma).to receive(:random_number).and_return(54294)
+
+      enigma.generate_keys
+      
+      expect(enigma.a_key).to eq(54)
+      expect(enigma.b_key).to eq(42)
+      expect(enigma.c_key).to eq(29)
+      expect(enigma.d_key).to eq(94)
+    end
+  end
 end
