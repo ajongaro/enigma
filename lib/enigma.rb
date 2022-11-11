@@ -2,18 +2,14 @@ require 'date'
 class Enigma
   attr_reader :alphabet,
               :random_number,
-              :a_key,
-              :b_key,
-              :c_key,
-              :d_key,
-              :a_offset,
-              :b_offset,
-              :c_offset,
-              :d_offset
+              :keys,
+              :offsets
 
   def initialize
     @alphabet = ("a".."z").to_a << " "
     @random_number = generate_random
+    @keys = {} 
+    @offsets = {} 
   end
 
   def generate_random
@@ -21,10 +17,14 @@ class Enigma
   end
 
   def generate_keys
-    @a_key = random_number.to_s.split("")[0..1].join.to_i
-    @b_key = random_number.to_s.split("")[1..2].join.to_i
-    @c_key = random_number.to_s.split("")[2..3].join.to_i
-    @d_key = random_number.to_s.split("")[3..4].join.to_i
+    @keys[:A] = random_number.to_s.split("")[0..1].join.to_i
+    @keys[:B] = random_number.to_s.split("")[1..2].join.to_i
+    @keys[:C] = random_number.to_s.split("")[2..3].join.to_i
+    @keys[:D] = random_number.to_s.split("")[3..4].join.to_i
+    # @a_key
+    # @b_key = random_number.to_s.split("")[1..2].join.to_i
+    # @c_key = random_number.to_s.split("")[2..3].join.to_i
+    # @d_key = random_number.to_s.split("")[3..4].join.to_i
   end
 
   def date_to_offset
@@ -33,7 +33,7 @@ class Enigma
   end
 
   def parse_offset
-    @a_offset, @b_offset, @c_offset, @d_offset = date_to_offset
+    @offsets[:A], @offsets[:B], @offsets[:C], @offsets[:D] = date_to_offset
   end
 
   def fetch_date

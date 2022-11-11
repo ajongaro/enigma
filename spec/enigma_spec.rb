@@ -20,6 +20,7 @@ RSpec.describe Enigma do
 
       expect(first_number).to_not eq(second_number)
       expect(enigma.random_number.digits.size).to eq(5)
+      expect(enigma.random_number).to be_between(00000, 99999).inclusive
       expect(enigma.random_number).to be_a(Integer)
     end
   end
@@ -30,10 +31,10 @@ RSpec.describe Enigma do
 
       enigma.generate_keys
       
-      expect(enigma.a_key).to eq(54)
-      expect(enigma.b_key).to eq(42)
-      expect(enigma.c_key).to eq(29)
-      expect(enigma.d_key).to eq(94)
+      expect(enigma.keys[:A]).to eq(54)
+      expect(enigma.keys[:B]).to eq(42)
+      expect(enigma.keys[:C]).to eq(29)
+      expect(enigma.keys[:D]).to eq(94)
     end
   end
 
@@ -50,10 +51,10 @@ RSpec.describe Enigma do
 
       enigma.parse_offset
 
-      expect(enigma.a_offset).to eq(8)
-      expect(enigma.b_offset).to eq(8)
-      expect(enigma.c_offset).to eq(8)
-      expect(enigma.d_offset).to eq(4)
+      expect(enigma.offsets[:A]).to eq(8)
+      expect(enigma.offsets[:B]).to eq(8)
+      expect(enigma.offsets[:C]).to eq(8)
+      expect(enigma.offsets[:D]).to eq(4)
     end
   end
 end
