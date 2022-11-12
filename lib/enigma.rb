@@ -11,8 +11,16 @@ class Enigma
     @shift = {}
   end
 
+  def encrypt(message, key=random_number, date=fetch_date)
+    generate_keys(key)
+
+    
+    
+    { encryption: output, key: key, date: date }
+  end
+
   def generate_random
-    rand(99999).to_s.rjust(5, "0").to_i
+    rand(99999).to_s.rjust(5, "0")
   end
 
   def generate_shift
@@ -22,22 +30,22 @@ class Enigma
     @shift[:D] = @key[:D] + @offset[:D]
   end
 
-  def generate_keys
-    @key[:A] = random_number.to_s.split("")[0..1].join.to_i
-    @key[:B] = random_number.to_s.split("")[1..2].join.to_i
-    @key[:C] = random_number.to_s.split("")[2..3].join.to_i
-    @key[:D] = random_number.to_s.split("")[3..4].join.to_i
+  def generate_keys(provided_key=random_number)
+    @key[:A] = provided_key.split("")[0..1].join.to_i
+    @key[:B] = provided_key.split("")[1..2].join.to_i
+    @key[:C] = provided_key.split("")[2..3].join.to_i
+    @key[:D] = provided_key.split("")[3..4].join.to_i
   end
 
-  def date_to_offset
-    (fetch_date**2).to_s[-4..-1].split("").map(&:to_i)
+  def date_to_offset(date)
+    (date.to_i**2).to_s[-4..-1].split("").map(&:to_i)
   end
 
-  def generate_offsets
-    @offset[:A], @offset[:B], @offset[:C], @offset[:D] = date_to_offset
+  def generate_offsets(date=fetch_date)
+    @offset[:A], @offset[:B], @offset[:C], @offset[:D] = date_to_offset(date)
   end
 
   def fetch_date
-    Date.today.strftime('%d%m%y').to_i
+    Date.today.strftime('%d%m%y')
   end
 end

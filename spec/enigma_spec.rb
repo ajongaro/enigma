@@ -19,17 +19,17 @@ RSpec.describe Enigma do
       second_number = enigma.generate_random
 
       expect(first_number).to_not eq(second_number)
-      expect(enigma.random_number.digits.size).to eq(5)
-      expect(enigma.random_number).to be_between(00000, 99999).inclusive
-      expect(enigma.random_number).to be_a(Integer)
+      expect(first_number.size).to eq(5)
+      expect(first_number).to be_between("00000", "99999").inclusive
+      expect(second_number).to be_a(String)
     end
   end
 
   describe '#generate_keys' do
     it 'generates keys based on random number' do
-      allow(enigma).to receive(:random_number).and_return(54294)
+      allow(enigma).to receive(:random_number).and_return("54294")
 
-      enigma.generate_keys
+      enigma.generate_keys("54294")
       
       expect(enigma.key[:A]).to eq(54)
       expect(enigma.key[:B]).to eq(42)
@@ -39,9 +39,9 @@ RSpec.describe Enigma do
   end
 
   describe '#fetch_date' do
-    it 'returns todays date as an integer' do
-      expect(enigma.fetch_date).to be_a(Integer)
-      expect(enigma.fetch_date.to_s.length).to eq(6)
+    it 'returns todays date as string' do
+      expect(enigma.fetch_date).to be_a(String)
+      expect(enigma.fetch_date.length).to eq(6)
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe Enigma do
     it 'generates offsets based on todays date' do
       allow(enigma).to receive(:fetch_date).and_return(111122)
 
-      enigma.generate_offsets
+      enigma.generate_offsets()
 
       expect(enigma.offset[:A]).to eq(8)
       expect(enigma.offset[:B]).to eq(8)
@@ -60,8 +60,8 @@ RSpec.describe Enigma do
 
   describe '#shift' do
     it 'combines final shift amount' do
-      allow(enigma).to receive(:random_number).and_return(54294)
-      allow(enigma).to receive(:fetch_date).and_return(111122)
+      allow(enigma).to receive(:random_number).and_return("54294")
+      allow(enigma).to receive(:fetch_date).and_return("111122")
       
       enigma.generate_offsets
       enigma.generate_keys
@@ -75,6 +75,13 @@ RSpec.describe Enigma do
   end
 
   describe '#encrypt' do
-    
+    it 'encrypts stuff' do
+      allow(enigma).to receive(:random_number).and_return("54294")
+      allow(enigma).to receive(:fetch_date).and_return("111122")
+
+      expect(enigma.encrypt('hello world')).to be_a(Hash)
+      expect(enigma.encrypt('hello world')).to eq({ encryption: "keder ohulw", key: '54294', date: '111122' })
+      expect(enigma.encrypt('hello world')).to be_a(Hash)
+    end
   end
 end
