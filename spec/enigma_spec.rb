@@ -31,10 +31,10 @@ RSpec.describe Enigma do
 
       enigma.generate_keys
       
-      expect(enigma.keys[:A]).to eq(54)
-      expect(enigma.keys[:B]).to eq(42)
-      expect(enigma.keys[:C]).to eq(29)
-      expect(enigma.keys[:D]).to eq(94)
+      expect(enigma.key[:A]).to eq(54)
+      expect(enigma.key[:B]).to eq(42)
+      expect(enigma.key[:C]).to eq(29)
+      expect(enigma.key[:D]).to eq(94)
     end
   end
 
@@ -49,12 +49,32 @@ RSpec.describe Enigma do
     it 'generates offsets based on todays date' do
       allow(enigma).to receive(:fetch_date).and_return(111122)
 
-      enigma.parse_offset
+      enigma.generate_offsets
 
-      expect(enigma.offsets[:A]).to eq(8)
-      expect(enigma.offsets[:B]).to eq(8)
-      expect(enigma.offsets[:C]).to eq(8)
-      expect(enigma.offsets[:D]).to eq(4)
+      expect(enigma.offset[:A]).to eq(8)
+      expect(enigma.offset[:B]).to eq(8)
+      expect(enigma.offset[:C]).to eq(8)
+      expect(enigma.offset[:D]).to eq(4)
     end
+  end
+
+  describe '#shift' do
+    it 'combines final shift amount' do
+      allow(enigma).to receive(:random_number).and_return(54294)
+      allow(enigma).to receive(:fetch_date).and_return(111122)
+      
+      enigma.generate_offsets
+      enigma.generate_keys
+      enigma.generate_shift
+
+      expect(enigma.shift[:A]).to eq(62)
+      expect(enigma.shift[:B]).to eq(50)
+      expect(enigma.shift[:C]).to eq(37)
+      expect(enigma.shift[:D]).to eq(98)
+    end
+  end
+
+  describe '#encrypt' do
+    
   end
 end
