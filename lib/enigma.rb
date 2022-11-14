@@ -11,12 +11,49 @@ class Enigma
     @shift = {}
   end
 
-  def encrypt(message, key=random_number, date=fetch_date)
+  def generator(key, date)
     generate_keys(key)
+    generate_offsets(date)
+    generate_shift
+  end
 
-    
-    
-    { encryption: output, key: key, date: date }
+  def determine_proper_shift(shift_number)
+    case shift_number
+    when 1 then return @shift[:A]
+    when 2 then return @shift[:B]
+    when 3 then return @shift[:C]
+    when 4 then return @shift[:D]
+    end
+  end
+
+  def encrypt(message, key=@random_number, date=fetch_date)
+    generator(key, date)
+    shift_number = 0
+    output = []
+
+    # convert message to letters 
+    message_array = message.chars
+    # access letter in letters 
+    message_array.each do |letter|
+    # find location of letter in @alphabet
+      shift_number += 1
+      letter_position = @alphabet.find_index(letter) 
+
+      new_alphabet = @alphabet.rotate(determine_proper_shift(shift_number))
+      output << new_alphabet[letter_position]
+
+      shift_number = 0 if shift_number == 4
+    end
+    # add/rotate shift to that letter by proper shift
+    # move letter_position shift times 
+    # get the correct shift
+    # do the correct thing with correct shift
+
+    # shovel that new letter into a new array
+    # join that array as a string
+    # stuff all that and more into hash below
+
+    { encryption: output.join, key: key, date: date }
   end
 
   def generate_random
@@ -30,7 +67,7 @@ class Enigma
     @shift[:D] = @key[:D] + @offset[:D]
   end
 
-  def generate_keys(provided_key=random_number)
+  def generate_keys(provided_key)
     @key[:A] = provided_key.split("")[0..1].join.to_i
     @key[:B] = provided_key.split("")[1..2].join.to_i
     @key[:C] = provided_key.split("")[2..3].join.to_i

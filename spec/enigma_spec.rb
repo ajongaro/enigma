@@ -27,8 +27,6 @@ RSpec.describe Enigma do
 
   describe '#generate_keys' do
     it 'generates keys based on random number' do
-      allow(enigma).to receive(:random_number).and_return("54294")
-
       enigma.generate_keys("54294")
       
       expect(enigma.key[:A]).to eq(54)
@@ -46,10 +44,10 @@ RSpec.describe Enigma do
   end
 
   describe '#generate_offsets' do
-    it 'generates offsets based on todays date' do
-      allow(enigma).to receive(:fetch_date).and_return(111122)
+    it 'generates offsets based on date' do
+      allow(enigma).to receive(:fetch_date).and_return('111122')
 
-      enigma.generate_offsets()
+      enigma.generate_offsets
 
       expect(enigma.offset[:A]).to eq(8)
       expect(enigma.offset[:B]).to eq(8)
@@ -60,11 +58,11 @@ RSpec.describe Enigma do
 
   describe '#shift' do
     it 'combines final shift amount' do
-      allow(enigma).to receive(:random_number).and_return("54294")
-      allow(enigma).to receive(:fetch_date).and_return("111122")
+      allow(enigma).to receive(:random_number).and_return('54294')
+      allow(enigma).to receive(:fetch_date).and_return('111122')
       
       enigma.generate_offsets
-      enigma.generate_keys
+      enigma.generate_keys(enigma.random_number)
       enigma.generate_shift
 
       expect(enigma.shift[:A]).to eq(62)
@@ -76,11 +74,13 @@ RSpec.describe Enigma do
 
   describe '#encrypt' do
     it 'encrypts stuff' do
-      allow(enigma).to receive(:random_number).and_return("54294")
-      allow(enigma).to receive(:fetch_date).and_return("111122")
+      # allow(enigma).to receive(:random_number).and_return("02715")
+      # allow(enigma).to receive(:fetch_date).and_return("040895")
 
-      expect(enigma.encrypt('hello world')).to be_a(Hash)
-      expect(enigma.encrypt('hello world')).to eq({ encryption: "keder ohulw", key: '54294', date: '111122' })
+      enigma.generator("02715", "040895")
+
+      expect(enigma.encrypt('hello world', "02715", "040895")).to be_a(Hash)
+      expect(enigma.encrypt('hello world', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
       expect(enigma.encrypt('hello world')).to be_a(Hash)
     end
   end
