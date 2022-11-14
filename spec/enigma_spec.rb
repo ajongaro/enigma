@@ -72,13 +72,14 @@ RSpec.describe Enigma do
     end
   end
 
+  describe '#decrypt' do
+    it 'decrypts stuff' do
+      expect(enigma.decrypt('keder ohulw', '02715', '040895')).to eq({ decryption: 'hello world', key: '02715', date: '040895' })
+    end
+  end
+
   describe '#encrypt' do
     it 'encrypts stuff' do
-      # allow(enigma).to receive(:random_number).and_return("02715")
-      # allow(enigma).to receive(:fetch_date).and_return("040895")
-
-      enigma.generator("02715", "040895")
-
       expect(enigma.encrypt('hello world', "02715", "040895")).to be_a(Hash)
       expect(enigma.encrypt('hello world', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
       expect(enigma.encrypt('hello world')).to be_a(Hash)

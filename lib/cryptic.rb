@@ -1,7 +1,5 @@
 module Cryptic
 
-  def generate_shift
-  end
 
 
   def parse_keys(key, provided_key)

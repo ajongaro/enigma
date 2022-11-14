@@ -3,8 +3,13 @@ require 'date'
 class Enigma
   attr_reader :alphabet, :random_number, :key, :offset, :shift
 
+  RANDOM_NUMBER = rand.to_s[2..6]
+  GET_DATE = Date.today.strftime('%d%m%y')
+  ALPHABET = ("a".."z").to_a << " " 
+
   def initialize
     @alphabet = ("a".."z").to_a << " "
+    @reverse_alphabet = @alphabet.reverse
     @random_number = generate_random
     @key = {} 
     @offset = {} 
@@ -17,8 +22,8 @@ class Enigma
     generate_shift
   end
 
-  def determine_proper_shift(shift_number)
-    case shift_number
+  def determine_proper(shift)
+    case shift
     when 1 then return @shift[:A]
     when 2 then return @shift[:B]
     when 3 then return @shift[:C]
@@ -26,32 +31,36 @@ class Enigma
     end
   end
 
-  def encrypt(message, key=@random_number, date=fetch_date)
+  def decrypt(message, key, date)
     generator(key, date)
-    shift_number = 0
+    shift = 0
     output = []
 
-    # convert message to letters 
-    message_array = message.chars
-    # access letter in letters 
-    message_array.each do |letter|
-    # find location of letter in @alphabet
-      shift_number += 1
+    message.chars.each do |letter|
+      shift += 1
+      letter_position = @reverse_alphabet.find_index(letter) 
+
+      new_alphabet = @reverse_alphabet.rotate(determine_proper(shift))
+      output << new_alphabet[letter_position]
+      shift = 0 if shift == 4
+    end
+
+    { decryption: output.join, key: key, date: date }
+  end
+
+  def encrypt(message, key=@random_number, date=fetch_date)
+    generator(key, date)
+    shift = 0
+    output = []
+
+    message.chars.each do |letter|
+      shift += 1
       letter_position = @alphabet.find_index(letter) 
 
-      new_alphabet = @alphabet.rotate(determine_proper_shift(shift_number))
+      new_alphabet = @alphabet.rotate(determine_proper(shift))
       output << new_alphabet[letter_position]
-
-      shift_number = 0 if shift_number == 4
+      shift = 0 if shift == 4
     end
-    # add/rotate shift to that letter by proper shift
-    # move letter_position shift times 
-    # get the correct shift
-    # do the correct thing with correct shift
-
-    # shovel that new letter into a new array
-    # join that array as a string
-    # stuff all that and more into hash below
 
     { encryption: output.join, key: key, date: date }
   end
