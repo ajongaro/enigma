@@ -1,9 +1,11 @@
+require 'generator'
 require 'date'
 
 class Enigma
+  include Generator
+
   attr_reader :alphabet, :random_number, :key, :offset, :shift
 
-  RANDOM_NUMBER = rand.to_s[2..6]
   GET_DATE = Date.today.strftime('%d%m%y')
   ALPHABET = ("a".."z").to_a << " " 
 
@@ -17,7 +19,7 @@ class Enigma
   end
 
   def generator(key, date)
-    generate_keys(key)
+    generate_keys_from(key)
     generate_offsets(date)
     generate_shift
   end
@@ -48,7 +50,7 @@ class Enigma
     { decryption: output.join, key: key, date: date }
   end
 
-  def encrypt(message, key=@random_number, date=fetch_date)
+  def encrypt(message, key=@random_number, date=GET_DATE)
     generator(key, date)
     shift = 0
     output = []
@@ -57,16 +59,11 @@ class Enigma
       shift += 1
       letter_position = @alphabet.find_index(letter) 
 
-      new_alphabet = @alphabet.rotate(determine_proper(shift))
-      output << new_alphabet[letter_position]
+      output << @alphabet.rotate(determine_proper(shift))[letter_position]
       shift = 0 if shift == 4
     end
 
     { encryption: output.join, key: key, date: date }
-  end
-
-  def generate_random
-    rand(99999).to_s.rjust(5, "0")
   end
 
   def generate_shift
@@ -76,22 +73,22 @@ class Enigma
     @shift[:D] = @key[:D] + @offset[:D]
   end
 
-  def generate_keys(provided_key)
-    @key[:A] = provided_key.split("")[0..1].join.to_i
-    @key[:B] = provided_key.split("")[1..2].join.to_i
-    @key[:C] = provided_key.split("")[2..3].join.to_i
-    @key[:D] = provided_key.split("")[3..4].join.to_i
+  def generate_keys_from(hash)
+    @key[:A] = hash.split("")[0..1].join.to_i
+    @key[:B] = hash.split("")[1..2].join.to_i
+    @key[:C] = hash.split("")[2..3].join.to_i
+    @key[:D] = hash.split("")[3..4].join.to_i
   end
 
   def date_to_offset(date)
     (date.to_i**2).to_s[-4..-1].split("").map(&:to_i)
   end
 
-  def generate_offsets(date=fetch_date)
+  def generate_offsets(date=GET_DATE)
     @offset[:A], @offset[:B], @offset[:C], @offset[:D] = date_to_offset(date)
   end
 
-  def fetch_date
-    Date.today.strftime('%d%m%y')
-  end
+  # def fetch_date
+  #   Date.today.strftime('%d%m%y')
+  # end
 end
