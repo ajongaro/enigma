@@ -11,7 +11,6 @@ class Enigma
 
   def initialize
     @random_number = generate_random
-    @output = []
     @shift = {}
   end
 
@@ -33,13 +32,14 @@ class Enigma
 
   def encrypt(message, key=@random_number, date=GET_DATE)
     build_shifts(key, date)
+    output = []
     count = 0
 
     letters_from(message).each do |letter|
       count += 1
 
       index = ALPHABET.find_index(letter) 
-      @output << ALPHABET.rotate(@shift[count])[index]
+      output << ALPHABET.rotate(@shift[count])[index]
 
       count = 0 if count == 4
     end
@@ -49,18 +49,19 @@ class Enigma
 
   def decrypt(message, key, date)
     build_shifts(key, date)
+    output = []
     count = 0
 
     letters_from(message).each do |letter|
       count += 1
 
       index = ALPHABET.find_index(letter) 
-      @output << ALPHABET.rotate(-@shift[count])[index]
+      output << ALPHABET.rotate(-@shift[count])[index]
 
       count = 0 if count == 4
     end
 
-    { decryption: @output.join, key: key, date: date }
+    { decryption: output.join, key: key, date: date }
   end
 
   def date_to_offset(date)

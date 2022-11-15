@@ -29,10 +29,10 @@ RSpec.describe Enigma do
     it 'generates keys based on random number' do
       key = enigma.generate_keys_from("54294")
       
-      expect(key[:A]).to eq(54)
-      expect(key[:B]).to eq(42)
-      expect(key[:C]).to eq(29)
-      expect(key[:D]).to eq(94)
+      expect(key[1]).to eq(54)
+      expect(key[2]).to eq(42)
+      expect(key[3]).to eq(29)
+      expect(key[4]).to eq(94)
     end
   end
 
@@ -47,10 +47,10 @@ RSpec.describe Enigma do
     it 'generates offsets based on date' do
       offsets = enigma.generate_offsets('111122')
 
-      expect(offsets[:A]).to eq(8)
-      expect(offsets[:B]).to eq(8)
-      expect(offsets[:C]).to eq(8)
-      expect(offsets[:D]).to eq(4)
+      expect(offsets[1]).to eq(8)
+      expect(offsets[2]).to eq(8)
+      expect(offsets[3]).to eq(8)
+      expect(offsets[4]).to eq(4)
     end
   end
 
