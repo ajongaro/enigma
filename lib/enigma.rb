@@ -1,4 +1,4 @@
-require 'generator'
+require_relative 'generator'
 require 'date'
 
 class Enigma

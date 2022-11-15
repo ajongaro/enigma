@@ -1,5 +1,9 @@
-require 'enigma'
+require_relative 'enigma'
 
-input_file = ARGV[0]
-output_file = ARGV[1]
+enigma = Enigma.new
 
+encrypted_file = File.open(ARGV[1], 'w')
+encryption = enigma.encrypt(File.read(ARGV[0]))
+encrypted_file.write(encryption[:encryption])
+
+puts "Created '#{ARGV[1]}' with the key #{encryption[:key]} and date #{encryption[:date]}"
