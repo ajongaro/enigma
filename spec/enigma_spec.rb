@@ -23,6 +23,13 @@ RSpec.describe Enigma do
     end
   end
 
+  describe 'GET_DATE' do
+    it 'returns todays date as string' do
+      expect(Enigma::GET_DATE).to be_a(String)
+      expect(Enigma::GET_DATE.length).to eq(6)
+    end
+  end
+
   describe '#generate_random' do
     it 'generates a random five digit number' do
       first_number = enigma.generate_random
