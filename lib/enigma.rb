@@ -4,73 +4,66 @@ require 'date'
 class Enigma
   include Generator
 
-  attr_reader :alphabet, :random_number, :key, :offset, :shift
+  attr_reader :random_number, :shift
 
   GET_DATE = Date.today.strftime('%d%m%y')
   ALPHABET = ("a".."z").to_a << " " 
 
   def initialize
-    @alphabet = ("a".."z").to_a << " "
-    @reverse_alphabet = @alphabet.reverse
     @random_number = generate_random
-    @key = {} 
-    @offset = {} 
+    @output = []
     @shift = {}
   end
 
-  def generator(key, date)
-    generate_keys_from(key)
-    generate_offsets(date)
-    generate_shift
+  def build_shifts(key, date)
+    keys = generate_keys_from(key)
+    offsets = generate_offsets(date)
+    generate_shift(keys, offsets)
   end
 
-  def shift_for(shift)
-    case shift
-    when 1 then return @shift[:A]
-    when 2 then return @shift[:B]
-    when 3 then return @shift[:C]
-    when 4 then return @shift[:D]
-    end
+  # Add Test
+  def letters_from(message)
+    message.downcase.chars
+  end
+
+  # Add Test
+  def special?(char)
+    ALPHABET.include?(char)
   end
 
   def encrypt(message, key=@random_number, date=GET_DATE)
-    generator(key, date)
-    shift = 0
-    output = []
+    build_shifts(key, date)
+    count = 0
 
-    message.chars.each do |letter|
-      shift += 1
-      letter_position = @alphabet.find_index(letter) 
+    letters_from(message).each do |letter|
+      count += 1
 
-      output << @alphabet.rotate(shift_for(shift))[letter_position]
-      shift = 0 if shift == 4
+      index = ALPHABET.find_index(letter) 
+      @output << ALPHABET.rotate(@shift[count])[index]
+
+      count = 0 if count == 4
     end
 
     { encryption: output.join, key: key, date: date }
   end
 
   def decrypt(message, key, date)
-    generator(key, date)
-    shift = 0
-    output = []
+    build_shifts(key, date)
+    count = 0
 
-    message.chars.each do |letter|
-      shift += 1
-      letter_position = @reverse_alphabet.find_index(letter) 
+    letters_from(message).each do |letter|
+      count += 1
 
-      output << @reverse_alphabet.rotate(shift_for(shift))[letter_position]
-      shift = 0 if shift == 4
+      index = ALPHABET.find_index(letter) 
+      @output << ALPHABET.rotate(-@shift[count])[index]
+
+      count = 0 if count == 4
     end
 
-    { decryption: output.join, key: key, date: date }
+    { decryption: @output.join, key: key, date: date }
   end
 
   def date_to_offset(date)
     (date.to_i**2).to_s[-4..-1].split("").map(&:to_i)
   end
-
-  # def generate_offsets(date=GET_DATE)
-  #   @offset[:A], @offset[:B], @offset[:C], @offset[:D] = date_to_offset(date)
-  # end
-
 end
