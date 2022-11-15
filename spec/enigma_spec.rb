@@ -27,12 +27,12 @@ RSpec.describe Enigma do
 
   describe '#generate_keys_from' do
     it 'generates keys based on random number' do
-      enigma.generate_keys_from("54294")
+      key = enigma.generate_keys_from("54294")
       
-      expect(enigma.key[:A]).to eq(54)
-      expect(enigma.key[:B]).to eq(42)
-      expect(enigma.key[:C]).to eq(29)
-      expect(enigma.key[:D]).to eq(94)
+      expect(key[:A]).to eq(54)
+      expect(key[:B]).to eq(42)
+      expect(key[:C]).to eq(29)
+      expect(key[:D]).to eq(94)
     end
   end
 
@@ -45,38 +45,37 @@ RSpec.describe Enigma do
 
   describe '#generate_offsets' do
     it 'generates offsets based on date' do
-      enigma.generate_offsets('111122')
+      offsets = enigma.generate_offsets('111122')
 
-      expect(enigma.offset[:A]).to eq(8)
-      expect(enigma.offset[:B]).to eq(8)
-      expect(enigma.offset[:C]).to eq(8)
-      expect(enigma.offset[:D]).to eq(4)
+      expect(offsets[:A]).to eq(8)
+      expect(offsets[:B]).to eq(8)
+      expect(offsets[:C]).to eq(8)
+      expect(offsets[:D]).to eq(4)
     end
   end
 
-  describe '#shift' do
-    it 'combines final shift amount' do
-      allow(enigma).to receive(:random_number).and_return('54294')
-      
-      enigma.generate_offsets('111122')
-      enigma.generate_keys_from(enigma.random_number)
-      enigma.generate_shift
+  describe '#build_shifts' do
+    it 'combines final shift amounts' do
+      offsets = enigma.generate_offsets('111122')
+      keys = enigma.generate_keys_from('54294')
 
-      expect(enigma.shift[:A]).to eq(62)
-      expect(enigma.shift[:B]).to eq(50)
-      expect(enigma.shift[:C]).to eq(37)
-      expect(enigma.shift[:D]).to eq(98)
+      enigma.generate_shift(keys, offsets)
+
+      expect(enigma.shift[1]).to eq(62)
+      expect(enigma.shift[2]).to eq(50)
+      expect(enigma.shift[3]).to eq(37)
+      expect(enigma.shift[4]).to eq(98)
     end
   end
 
   describe '#decrypt' do
-    it 'decrypts stuff' do
+    it 'decrypts messages with key and date' do
       expect(enigma.decrypt('keder ohulw', '02715', '040895')).to eq({ decryption: 'hello world', key: '02715', date: '040895' })
     end
   end
 
   describe '#encrypt' do
-    it 'encrypts stuff' do
+    it 'encrypts message from key and date' do
       expect(enigma.encrypt('hello world', "02715", "040895")).to be_a(Hash)
       expect(enigma.encrypt('hello world', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
       expect(enigma.encrypt('hello world')).to be_a(Hash)
