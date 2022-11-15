@@ -3,6 +3,12 @@ module Generator
     rand(99999).to_s.rjust(5, "0")
   end
 
+  def build_shifts(key, date)
+    keys = generate_keys_from(key)
+    offsets = generate_offsets(date)
+    generate_shift(keys, offsets)
+  end
+
   def generate_shift(key, offset)
     (1..4).each do |num|
       @shift[num] = key[num] + offset[num]
@@ -27,4 +33,5 @@ module Generator
     offset[1], offset[2], offset[3], offset[4] = date_to_offset(date)
     offset
   end
+
 end

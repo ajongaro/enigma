@@ -15,12 +15,6 @@ class Enigma
     @shift = {}
   end
 
-  def build_shifts(key, date)
-    keys = generate_keys_from(key)
-    offsets = generate_offsets(date)
-    generate_shift(keys, offsets)
-  end
-
   # Add Test
   def letters_from(message)
     message.downcase.chars
@@ -45,52 +39,21 @@ class Enigma
 
   def encrypt(message, key=@random_number, date=GET_DATE)
     build_shifts(key, date)
-    { encryption: crypt(message, key, date, ALPHABET), key: key, date: date }
+
+    { 
+      encryption: crypt(message, key, date, ALPHABET),
+      key: key,
+      date: date
+    }
   end
 
   def decrypt(message, key, date)
     build_shifts(key, date)
-    output = []
-    count = 0
 
-    letters_from(message).each do |letter|
-      count += 1
-
-      if special?(letter)
-        output << letter
-      else
-        index = ALPHABET.find_index(letter) 
-        output << ALPHABET.rotate(-@shift[count])[index]
-      end
-
-      count = 0 if count == 4
-    end
-
-    { decryption: output.join, key: key, date: date }
-  end
-
-  # def decrypt(message, key, date)
-  #   build_shifts(key, date)
-  #   output = []
-  #   count = 0
-
-  #   letters_from(message).each do |letter|
-  #     count += 1
-
-  #     if special?(letter)
-  #       output << letter
-  #     else
-  #       index = ALPHABET.find_index(letter) 
-  #       output << ALPHABET.rotate(-@shift[count])[index]
-  #     end
-
-  #     count = 0 if count == 4
-  #   end
-
-  #   { decryption: output.join, key: key, date: date }
-  # end
-
-  def date_to_offset(date)
-    (date.to_i**2).to_s[-4..-1].split("").map(&:to_i)
+    { 
+      decryption: crypt(message, key, date, R_ALPHABET),
+      key: key,
+      date: date
+    }
   end
 end

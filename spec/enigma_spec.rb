@@ -7,19 +7,17 @@ RSpec.describe Enigma do
     it 'exists' do
       expect(enigma).to be_a(Enigma)
     end
-
   end
 
   describe 'ALPHABET' do
-    it 'generates an array of letters plus space' do
+    it 'is sorted from a to z letters plus space' do
       expect(Enigma::ALPHABET).to eq(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "])
     end
   end
 
-  describe 'GET_DATE' do
-    it 'returns todays date as string' do
-      expect(Enigma::GET_DATE).to be_a(String)
-      expect(Enigma::GET_DATE.length).to eq(6)
+  describe 'R_ALPHABET' do
+    it 'is sorted from z to a beginning with space' do
+      expect(Enigma::R_ALPHABET).to eq([" ", "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a"])
     end
   end
 
@@ -27,6 +25,7 @@ RSpec.describe Enigma do
     it 'returns todays date as string' do
       expect(Enigma::GET_DATE).to be_a(String)
       expect(Enigma::GET_DATE.length).to eq(6)
+      expect(Enigma::GET_DATE).to eq(Date.today.strftime('%d%m%y'))
     end
   end
 
