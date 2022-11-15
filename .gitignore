@@ -1,6 +1,6 @@
-# Project
-decrypted.txt
+# Text
 encrypted.txt
+decrypted.txt
 
 # Ignore
 *.gem

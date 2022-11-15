@@ -1,31 +1,22 @@
 module Generator
   def generate_random
-    rand(99999).to_s.rjust(5, "0")
-  end
-
-  def build_shifts(key, date)
-    keys = generate_keys_from(key)
-    offsets = generate_offsets(date)
-    generate_shift(keys, offsets)
-  end
-
-  def generate_shift(key, offset)
-    (1..4).each do |num|
-      @shift[num] = key[num] + offset[num]
-    end
+    rand(99_999).to_s.rjust(5, '0')
   end
 
   def date_to_offset(date)
-    (date.to_i**2).to_s[-4..-1].split("").map(&:to_i)
+    (date.to_i**2).to_s[-4..-1].split('').map(&:to_i)
   end
 
-  def generate_keys_from(hash)
-    key = {}
-    key[1] = hash[0..1].to_i
-    key[2] = hash[1..2].to_i
-    key[3] = hash[2..3].to_i
-    key[4] = hash[3..4].to_i
-    key
+  def generate_turns(key, date)
+    keys = generate_keys_from(key)
+    offsets = generate_offsets(date)
+    generate_shifts(keys, offsets)
+  end
+
+  def generate_shifts(key, offset)
+    (1..4).each do |num|
+      @shift[num] = key[num] + offset[num]
+    end
   end
 
   def generate_offsets(date=GET_DATE)
@@ -34,4 +25,12 @@ module Generator
     offset
   end
 
+  def generate_keys_from(string)
+    key = {}
+    key[1] = string[0..1].to_i
+    key[2] = string[1..2].to_i
+    key[3] = string[2..3].to_i
+    key[4] = string[3..4].to_i
+    key
+  end
 end

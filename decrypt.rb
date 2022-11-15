@@ -1,4 +1,4 @@
-require_relative 'enigma'
+require_relative './lib/enigma'
 
 enigma = Enigma.new
 encrypted_file = File.read(ARGV[0])
