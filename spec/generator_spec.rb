@@ -37,7 +37,7 @@ RSpec.describe Generator do
     end
   end
 
-  describe '#build_shifts' do
+  describe '#compile_shifts' do
     it 'combines final shift amounts' do
       offsets = enigma.generate_offsets('111122')
       keys = enigma.generate_keys_from('54294')

@@ -31,21 +31,56 @@ RSpec.describe Enigma do
     end
   end
 
+  describe 'date_to_offset()' do
+    it 'modifies date to offset keys' do
+      expect(enigma.date_to_offset('111122')).to eq([8, 8, 8, 4])
+      expect(enigma.date_to_offset('040799')).to eq([8, 4, 0, 1])
+      expect(enigma.date_to_offset('010301')).to eq([0, 6, 0, 1])
+    end
+  end
+
   describe '#decrypt' do
     it 'decrypts messages with key and date' do
-      expect(enigma.decrypt('keder ohulw', '02715',
-                            '040895')).to eq({ decryption: 'hello world', key: '02715', date: '040895' })
+      expect(enigma.decrypt('keder ohulw', '02715', '040895')).to eq({
+        decryption: 'hello world',
+        key: '02715',
+        date: '040895' })
+
+      expect(enigma.decrypt('e DtdsLtrfy', '02715', '040895')).to eq({ 
+        decryption: 'b l ast off',
+        key: '02715',
+        date: '040895' })
+
+      expect(enigma.decrypt('keder ohulw', '02715', '040895')).to eq({
+        decryption: 'hello world',
+        key: '02715',
+        date: '040895' })
     end
   end
 
   describe '#encrypt' do
     it 'encrypts message from key and date' do
-      expect(enigma.encrypt('hello world')).to be_a(Hash)
       expect(enigma.encrypt('hello world', '02715', '040895')).to be_a(Hash)
-      expect(enigma.encrypt('hello world', '02715',
-                            '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
-      expect(enigma.encrypt('HeLLo wORld', '02715',
-                            '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
+
+      expect(enigma.encrypt('hello world', '02715', '040895')).to eq({
+        encryption: 'keder ohulw',
+        key: '02715',
+        date: '040895' })
+
+      expect(enigma.encrypt('HeLLo wORld', '02715', '040895')).to eq({
+        encryption: 'keder ohulw',
+        key: '02715',
+        date: '040895' })
+    end
+
+    it 'will encrypt without a given date or key' do
+      expect(enigma.encrypt('hello world')).to be_a(Hash)
+
+      encryption = enigma.encrypt('hello there')
+
+      expect(encryption[:encryption].length).to eq(11)
+      expect(encryption[:encryption]).to_not eq('hello there')
+      expect(encryption[:date]).to eq(Enigma::GET_DATE)
     end
 
     it 'can take variable case messages' do

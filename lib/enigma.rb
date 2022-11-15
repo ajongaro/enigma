@@ -26,7 +26,7 @@ class Enigma
   end
 
   # Add Test
-  def crypt(message, _key, _date, alphabet)
+  def crypt(message, key, date, alphabet)
     letters_from(message).map.with_index do |letter, index|
       if special?(letter)
         letter
@@ -37,8 +37,8 @@ class Enigma
     end.join
   end
 
-  def encrypt(message, key = @random_number, date = GET_DATE)
-    build_shifts(key, date)
+  def encrypt(message, key=@random_number, date=GET_DATE)
+    compile_shifts(key, date)
 
     {
       encryption: crypt(message, key, date, ALPHABET),
@@ -48,7 +48,7 @@ class Enigma
   end
 
   def decrypt(message, key, date)
-    build_shifts(key, date)
+    compile_shifts(key, date)
 
     {
       decryption: crypt(message, key, date, R_ALPHABET),
