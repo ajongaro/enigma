@@ -19,7 +19,6 @@ class Enigma
     message.downcase.chars
   end
 
-  # Add Test
   def special?(char)
     !ALPHABET.include?(char.downcase)
   end

@@ -1,3 +1,4 @@
+require './lib/enigma'
 require './lib/generator'
 
 RSpec.describe Generator do
