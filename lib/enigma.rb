@@ -1,4 +1,4 @@
-require 'generator'
+require_relative 'generator'
 require 'date'
 
 class Enigma
@@ -8,17 +8,11 @@ class Enigma
 
   GET_DATE = Date.today.strftime('%d%m%y')
   ALPHABET = ("a".."z").to_a << " " 
+  R_ALPHABET = ALPHABET.reverse
 
   def initialize
     @random_number = generate_random
-    @output = []
     @shift = {}
-  end
-
-  def build_shifts(key, date)
-    keys = generate_keys_from(key)
-    offsets = generate_offsets(date)
-    generate_shift(keys, offsets)
   end
 
   # Add Test
@@ -28,42 +22,38 @@ class Enigma
 
   # Add Test
   def special?(char)
-    ALPHABET.include?(char)
+    !ALPHABET.include?(char)
+  end
+
+  # Add Test
+  def crypt(message, key, date, alphabet)
+    letters_from(message).map.with_index do |letter, index|
+      if special?(letter)
+        letter
+      else
+        location = alphabet.find_index(letter) 
+        alphabet.rotate(@shift[(index % 4) + 1])[location]
+      end
+    end.join
   end
 
   def encrypt(message, key=@random_number, date=GET_DATE)
     build_shifts(key, date)
-    count = 0
 
-    letters_from(message).each do |letter|
-      count += 1
-
-      index = ALPHABET.find_index(letter) 
-      @output << ALPHABET.rotate(@shift[count])[index]
-
-      count = 0 if count == 4
-    end
-
-    { encryption: output.join, key: key, date: date }
+    { 
+      encryption: crypt(message, key, date, ALPHABET),
+      key: key,
+      date: date
+    }
   end
 
   def decrypt(message, key, date)
     build_shifts(key, date)
-    count = 0
 
-    letters_from(message).each do |letter|
-      count += 1
-
-      index = ALPHABET.find_index(letter) 
-      @output << ALPHABET.rotate(-@shift[count])[index]
-
-      count = 0 if count == 4
-    end
-
-    { decryption: @output.join, key: key, date: date }
-  end
-
-  def date_to_offset(date)
-    (date.to_i**2).to_s[-4..-1].split("").map(&:to_i)
+    { 
+      decryption: crypt(message, key, date, R_ALPHABET),
+      key: key,
+      date: date
+    }
   end
 end

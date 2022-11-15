@@ -7,9 +7,25 @@ RSpec.describe Enigma do
     it 'exists' do
       expect(enigma).to be_a(Enigma)
     end
+  end
 
-    it 'generates an array of letters plus space' do
+  describe 'ALPHABET' do
+    it 'is sorted from a to z letters plus space' do
       expect(Enigma::ALPHABET).to eq(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "])
+    end
+  end
+
+  describe 'R_ALPHABET' do
+    it 'is sorted from z to a beginning with space' do
+      expect(Enigma::R_ALPHABET).to eq([" ", "z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a"])
+    end
+  end
+
+  describe 'GET_DATE' do
+    it 'returns todays date as string' do
+      expect(Enigma::GET_DATE).to be_a(String)
+      expect(Enigma::GET_DATE.length).to eq(6)
+      expect(Enigma::GET_DATE).to eq(Date.today.strftime('%d%m%y'))
     end
   end
 
@@ -29,17 +45,10 @@ RSpec.describe Enigma do
     it 'generates keys based on random number' do
       key = enigma.generate_keys_from("54294")
       
-      expect(key[:A]).to eq(54)
-      expect(key[:B]).to eq(42)
-      expect(key[:C]).to eq(29)
-      expect(key[:D]).to eq(94)
-    end
-  end
-
-  describe 'GET_DATE' do
-    it 'returns todays date as string' do
-      expect(Enigma::GET_DATE).to be_a(String)
-      expect(Enigma::GET_DATE.length).to eq(6)
+      expect(key[1]).to eq(54)
+      expect(key[2]).to eq(42)
+      expect(key[3]).to eq(29)
+      expect(key[4]).to eq(94)
     end
   end
 
@@ -47,10 +56,10 @@ RSpec.describe Enigma do
     it 'generates offsets based on date' do
       offsets = enigma.generate_offsets('111122')
 
-      expect(offsets[:A]).to eq(8)
-      expect(offsets[:B]).to eq(8)
-      expect(offsets[:C]).to eq(8)
-      expect(offsets[:D]).to eq(4)
+      expect(offsets[1]).to eq(8)
+      expect(offsets[2]).to eq(8)
+      expect(offsets[3]).to eq(8)
+      expect(offsets[4]).to eq(4)
     end
   end
 
@@ -76,9 +85,20 @@ RSpec.describe Enigma do
 
   describe '#encrypt' do
     it 'encrypts message from key and date' do
-      expect(enigma.encrypt('hello world', "02715", "040895")).to be_a(Hash)
-      expect(enigma.encrypt('hello world', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
       expect(enigma.encrypt('hello world')).to be_a(Hash)
+      expect(enigma.encrypt('hello world', '02715', '040895')).to be_a(Hash)
+      expect(enigma.encrypt('hello world', '02715', '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
+      expect(enigma.encrypt('HeLLo wORld', '02715', '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
+    end
+
+    it 'can take variable case messages' do
+      expect(enigma.encrypt('HeLLo wORld', '02715', '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
+      expect(enigma.encrypt('B L ast OfF', '02715', '040895')).to eq({ encryption: 'e dtdsltrfy', key: '02715', date: '040895' })
+    end
+    
+    it 'can pass through special characters' do
+      expect(enigma.encrypt('test.string', '02715', '040895')).to eq({ encryption: 'wekm.slklnz', key: '02715', date: '040895' })
+      expect(enigma.encrypt('<!testTEST!#*()@&!$%^ test', '02715', '040895')).to eq({ encryption: '<!lyvtlyvt!#*()@&!$%^ lyvt', key: '02715', date: '040895' })
     end
   end
 end
