@@ -27,7 +27,7 @@ class Enigma
 
   # Add Test
   def special?(char)
-    ALPHABET.include?(char)
+    !ALPHABET.include?(char)
   end
 
   def encrypt(message, key=@random_number, date=GET_DATE)
@@ -59,8 +59,12 @@ class Enigma
     letters_from(message).each do |letter|
       count += 1
 
-      index = ALPHABET.find_index(letter) 
-      output << ALPHABET.rotate(-@shift[count])[index]
+      if special?(letter)
+        output << letter
+      else
+        index = ALPHABET.find_index(letter) 
+        output << ALPHABET.rotate(-@shift[count])[index]
+      end
 
       count = 0 if count == 4
     end

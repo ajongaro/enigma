@@ -8,8 +8,18 @@ RSpec.describe Enigma do
       expect(enigma).to be_a(Enigma)
     end
 
+  end
+
+  describe 'ALPHABET' do
     it 'generates an array of letters plus space' do
       expect(Enigma::ALPHABET).to eq(["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "])
+    end
+  end
+
+  describe 'GET_DATE' do
+    it 'returns todays date as string' do
+      expect(Enigma::GET_DATE).to be_a(String)
+      expect(Enigma::GET_DATE.length).to eq(6)
     end
   end
 
@@ -33,13 +43,6 @@ RSpec.describe Enigma do
       expect(key[2]).to eq(42)
       expect(key[3]).to eq(29)
       expect(key[4]).to eq(94)
-    end
-  end
-
-  describe 'GET_DATE' do
-    it 'returns todays date as string' do
-      expect(Enigma::GET_DATE).to be_a(String)
-      expect(Enigma::GET_DATE.length).to eq(6)
     end
   end
 
@@ -76,11 +79,20 @@ RSpec.describe Enigma do
 
   describe '#encrypt' do
     it 'encrypts message from key and date' do
-      expect(enigma.encrypt('hello world', "02715", "040895")).to be_a(Hash)
-      expect(enigma.encrypt('hello world', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
       expect(enigma.encrypt('hello world')).to be_a(Hash)
-      expect(enigma.encrypt('HeLLo wORld', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
-      expect(enigma.encrypt('test.string' "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
+      expect(enigma.encrypt('hello world', '02715', '040895')).to be_a(Hash)
+      expect(enigma.encrypt('hello world', '02715', '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
+      expect(enigma.encrypt('HeLLo wORld', '02715', '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
+    end
+
+    it 'can take variable case messages' do
+      expect(enigma.encrypt('HeLLo wORld', '02715', '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
+      expect(enigma.encrypt('B L ast OfF', '02715', '040895')).to eq({ encryption: 'e dtdsltrfy', key: '02715', date: '040895' })
+    end
+    
+    it 'can pass through special characters' do
+      expect(enigma.encrypt('test.string', '02715', '040895')).to eq({ encryption: 'wekm.slklnz', key: '02715', date: '040895' })
+      expect(enigma.encrypt('<!testTEST!#*()@&!$%^ test', '02715', '040895')).to eq({ encryption: '<!lyvtlyvt!#*()@&!$%^ lyvt', key: '02715', date: '040895' })
     end
   end
 end
