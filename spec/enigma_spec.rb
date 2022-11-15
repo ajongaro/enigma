@@ -79,6 +79,8 @@ RSpec.describe Enigma do
       expect(enigma.encrypt('hello world', "02715", "040895")).to be_a(Hash)
       expect(enigma.encrypt('hello world', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
       expect(enigma.encrypt('hello world')).to be_a(Hash)
+      expect(enigma.encrypt('HeLLo wORld', "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
+      expect(enigma.encrypt('test.string' "02715", "040895")).to eq({ encryption: "keder ohulw", key: '02715', date: '040895' })
     end
   end
 end
