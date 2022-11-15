@@ -23,7 +23,6 @@ class Enigma
     !ALPHABET.include?(char.downcase)
   end
 
-  # Add Test
   def crypt(message, key, date, alphabet)
     letters_from(message).map.with_index do |letter, index|
       if special?(letter)
