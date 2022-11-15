@@ -7,7 +7,7 @@ module Generator
     (date.to_i**2).to_s[-4..-1].split('').map(&:to_i)
   end
 
-  def compile_shifts(key, date)
+  def generate_turns(key, date)
     keys = generate_keys_from(key)
     offsets = generate_offsets(date)
     generate_shifts(keys, offsets)

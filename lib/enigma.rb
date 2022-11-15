@@ -15,14 +15,13 @@ class Enigma
     @shift = {}
   end
 
-  # Add Test
   def letters_from(message)
     message.downcase.chars
   end
 
   # Add Test
   def special?(char)
-    !ALPHABET.include?(char)
+    !ALPHABET.include?(char.downcase)
   end
 
   # Add Test
@@ -38,7 +37,7 @@ class Enigma
   end
 
   def encrypt(message, key=@random_number, date=GET_DATE)
-    compile_shifts(key, date)
+    generate_turns(key, date)
 
     {
       encryption: crypt(message, key, date, ALPHABET),
@@ -48,7 +47,7 @@ class Enigma
   end
 
   def decrypt(message, key, date)
-    compile_shifts(key, date)
+    generate_turns(key, date)
 
     {
       decryption: crypt(message, key, date, R_ALPHABET),

@@ -26,6 +26,14 @@ RSpec.describe Generator do
     end
   end
 
+  describe 'date_to_offset()' do
+    it 'modifies date to offset keys' do
+      expect(enigma.date_to_offset('111122')).to eq([8, 8, 8, 4])
+      expect(enigma.date_to_offset('040799')).to eq([8, 4, 0, 1])
+      expect(enigma.date_to_offset('010301')).to eq([0, 6, 0, 1])
+    end
+  end
+
   describe '#generate_offsets' do
     it 'generates offsets based on date' do
       offsets = enigma.generate_offsets('111122')
@@ -37,7 +45,21 @@ RSpec.describe Generator do
     end
   end
 
-  describe '#compile_shifts' do
+  describe '#generate_shifts' do
+    it 'combines final shift amounts' do
+      offsets = enigma.generate_offsets('111122')
+      keys = enigma.generate_keys_from('54294')
+
+      enigma.generate_shifts(keys, offsets)
+
+      expect(enigma.shift[1]).to eq(62)
+      expect(enigma.shift[2]).to eq(50)
+      expect(enigma.shift[3]).to eq(37)
+      expect(enigma.shift[4]).to eq(98)
+    end
+  end
+
+  describe '#generate_shifts' do
     it 'combines final shift amounts' do
       offsets = enigma.generate_offsets('111122')
       keys = enigma.generate_keys_from('54294')

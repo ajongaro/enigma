@@ -31,11 +31,18 @@ RSpec.describe Enigma do
     end
   end
 
-  describe 'date_to_offset()' do
-    it 'modifies date to offset keys' do
-      expect(enigma.date_to_offset('111122')).to eq([8, 8, 8, 4])
-      expect(enigma.date_to_offset('040799')).to eq([8, 4, 0, 1])
-      expect(enigma.date_to_offset('010301')).to eq([0, 6, 0, 1])
+  describe 'letters_from()' do
+    it 'returns array of letters from string' do
+      expect(enigma.letters_from('hello')).to eq(['h','e','l','l','o'])
+    end
+  end
+
+  describe 'special?()' do
+    it 'returns a boolean whether special character or not' do
+      expect(enigma.special?("!")).to be true
+      expect(enigma.special?("*")).to be true
+      expect(enigma.special?(".")).to be true
+      expect(enigma.special?("A")).to be false
     end
   end
 
@@ -50,23 +57,29 @@ RSpec.describe Enigma do
         decryption: 'b l ast off',
         key: '02715',
         date: '040895' })
+    end  
 
-      expect(enigma.decrypt('keder ohulw', '02715', '040895')).to eq({
-        decryption: 'hello world',
+    it 'can pass through special characters' do
+      expect(enigma.decrypt('k.de0 oh1lw', '02715', '040895')).to eq({
+        decryption: 'h.ll0 wo1ld',
         key: '02715',
         date: '040895' })
     end
   end
 
   describe '#encrypt' do
-    it 'encrypts message from key and date' do
+    it 'returns a hash' do
       expect(enigma.encrypt('hello world', '02715', '040895')).to be_a(Hash)
-
+    end
+    
+    it 'encrypts a message by a given key and shift' do
       expect(enigma.encrypt('hello world', '02715', '040895')).to eq({
         encryption: 'keder ohulw',
         key: '02715',
         date: '040895' })
-
+    end
+    
+    it 'can encrypt when varied case is given' do
       expect(enigma.encrypt('HeLLo wORld', '02715', '040895')).to eq({
         encryption: 'keder ohulw',
         key: '02715',
