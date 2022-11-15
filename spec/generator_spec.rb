@@ -27,7 +27,7 @@ RSpec.describe Generator do
     end
   end
 
-  describe 'date_to_offset()' do
+  describe '#date_to_offset()' do
     it 'modifies date to offset keys' do
       expect(enigma.date_to_offset('111122')).to eq([8, 8, 8, 4])
       expect(enigma.date_to_offset('040799')).to eq([8, 4, 0, 1])

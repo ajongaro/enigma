@@ -97,17 +97,27 @@ RSpec.describe Enigma do
     end
 
     it 'can take variable case messages' do
-      expect(enigma.encrypt('HeLLo wORld', '02715',
-                            '040895')).to eq({ encryption: 'keder ohulw', key: '02715', date: '040895' })
-      expect(enigma.encrypt('B L ast OfF', '02715',
-                            '040895')).to eq({ encryption: 'e dtdsltrfy', key: '02715', date: '040895' })
+      expect(enigma.encrypt('HeLLo wORld', '02715', '040895')).to eq({
+        encryption: 'keder ohulw',
+        key: '02715',
+        date: '040895' })
+
+      expect(enigma.encrypt('B L ast OfF', '02715', '040895')).to eq({
+        encryption: 'e dtdsltrfy',
+        key: '02715',
+        date: '040895' })
     end
 
     it 'can pass through special characters' do
-      expect(enigma.encrypt('test.string', '02715',
-                            '040895')).to eq({ encryption: 'wekm.slklnz', key: '02715', date: '040895' })
-      expect(enigma.encrypt('<!testTEST!#*()@&!$%^ test', '02715',
-                            '040895')).to eq({ encryption: '<!lyvtlyvt!#*()@&!$%^ lyvt', key: '02715', date: '040895' })
+      expect(enigma.encrypt('test.string', '02715', '040895')).to eq({
+        encryption: 'wekm.slklnz',
+        key: '02715',
+        date: '040895' })
+
+      expect(enigma.encrypt('<!testTEST!#*()@&!$%^ test', '02715', '040895')).to eq({
+        encryption: '<!lyvtlyvt!#*()@&!$%^ lyvt',
+        key: '02715',
+        date: '040895' })
     end
   end
 end
